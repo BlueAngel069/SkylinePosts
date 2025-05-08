@@ -50,10 +50,9 @@ router.get('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/login'));
 });
 
-module.exports = router;
-
 // Redirect root URL to login or dashboard
 router.get('/', (req, res) => {
-  // You can change this to '/blog/dashboard' if you prefer
-  res.redirect('/login');
+  res.redirect('/login'); // or you can change this to '/blog/dashboard'
 });
+
+module.exports = router;
