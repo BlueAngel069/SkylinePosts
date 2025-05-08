@@ -16,15 +16,15 @@
 
   <!-- Form to Update Profile -->
   <form action="/profile" method="POST" enctype="multipart/form-data">
-    <label>Username:</label><br>
-    <input type="text" name="username" value="<%= username %>" /><br><br>
+    <label for="username">Username:</label><br>
+    <input type="text" name="username" id="username" value="<%= username %>" required /><br><br>
 
-    <label>Bio:</label><br>
-    <textarea name="bio" rows="4" placeholder="Write something about yourself..."><%= profile.bio || '' %></textarea><br><br>
+    <label for="bio">Bio:</label><br>
+    <textarea name="bio" id="bio" rows="4" placeholder="Write something about yourself..."><%= profile.bio || '' %></textarea><br><br>
 
     <!-- Upload Profile Picture -->
-    <label>Upload Profile Picture:</label><br>
-    <input type="file" name="photo" accept="image/*" /><br><br>
+    <label for="photo">Upload Profile Picture:</label><br>
+    <input type="file" name="photo" id="photo" accept="image/*" /><br><br>
 
     <button type="submit">Save Profile</button>
   </form>
