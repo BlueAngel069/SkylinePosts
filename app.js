@@ -1,33 +1,40 @@
-require('dotenv').config();
 const express = require('express');
-const path = require('path');
 const session = require('express-session');
-const app = express();
+const RedisStore = require('connect-redis')(session);
+const redis = require('redis');
 
-const authRoutes = require('./routes/auth');
-const blogRoutes = require('./routes/blog');
-const profileRoutes = require('./routes/profile'); // ✅ added
+// Set up the Redis client
+const redisClient = redis.createClient({
+  host: 'localhost', // Use Redis service host or `process.env.REDIS_URL` for Render
+  port: 6379,        // Default Redis port
+});
 
-app.use(express.urlencoded({ extended: false }));
-
-// Serve static files (CSS, JS, images)
-app.use(express.static(path.join(__dirname, 'public')));
-
-// ✅ Serve uploaded images
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
-
-app.set('view engine', 'ejs');
-
-app.use(session({
+// Set up session middleware with Redis store
+const sessionMiddleware = session({
+  store: new RedisStore({ client: redisClient }),
   secret: process.env.SESSION_SECRET || 'secret_key',
   resave: false,
   saveUninitialized: false,
-}));
+  cookie: { secure: false } // Set to `true` if you're using HTTPS in production
+});
 
-app.use('/', authRoutes);
-app.use('/blog', blogRoutes);
-app.use('/profile', profileRoutes); // ✅ added
+const app = express();
 
+// Use session middleware globally
+app.use(sessionMiddleware);
+
+// Other middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// Routes
+const authRoutes = require('./routes/auth');
+app.use('/', authRoutes);  // Applying the auth routes
+
+// Set up your app to listen on the appropriate port
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
+module.exports = app;
