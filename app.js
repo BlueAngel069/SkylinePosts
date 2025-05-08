@@ -45,11 +45,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static files like images
 
 // Handle profile picture upload and user data update
-app.post('/profile/update', upload.single('profilePic'), (req, res) => {
-  const profilePic = req.file ? req.file.filename : null; // Save the file name
+app.post('/profile', upload.single('photo'), (req, res) => {
+  const { username, bio } = req.body;
+  const profilePic = req.file ? req.file.filename : null; // Get file name if uploaded
 
-  db.run('UPDATE users SET profilePic = ? WHERE username = ?', [profilePic, req.session.user.username], function (err) {
-    if (err) return res.send('Error updating profile picture!');
+  db.run('UPDATE users SET profilePic = ?, bio = ? WHERE username = ?', [profilePic, bio, username], function(err) {
+    if (err) return res.send('Error updating profile!');
     res.redirect('/profile');
   });
 });
