@@ -12,13 +12,12 @@
 
   <h1>Welcome, <%= user.username %></h1>
 
-<!-- Display Profile Picture -->
-<% if (user.profilePic) { %>
-  <img src="/uploads/profiles/<%= user.profilePic %>" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
-<% } else { %>
-  <img src="/uploads/profiles/default.jpg" alt="Default Profile Picture" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
-<% } %>
-
+  <!-- Display Profile Picture -->
+  <% if (user.profilePic) { %>
+    <img src="/uploads/profiles/<%= user.profilePic %>" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+  <% } else { %>
+    <img src="/uploads/profiles/default.jpg" alt="Default Profile Picture" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+  <% } %>
 
   <!-- Create Post Form -->
   <form action="/blog/create" method="POST" enctype="multipart/form-data">
