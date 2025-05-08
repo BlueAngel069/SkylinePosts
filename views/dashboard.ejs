@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .top-bar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1em;
+      margin-bottom: 1em;
+    }
+
+    .top-bar a {
+      background-color: #007BFF;
+      color: #fff;
+      padding: 0.5em 1em;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .top-bar a:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <a href="/logout">Logout</a>
+    <a href="/profile">Profile</a>
+  </div>
+  
+
+  <h1>Welcome, <%= user.username %></h1>
+
+
+  <form action="/blog/create" method="POST" enctype="multipart/form-data">
+    <input type="text" name="title" placeholder="Post title" required />
+    <br>
+    <textarea name="content" placeholder="Write your post..." required></textarea>
+    <br>
+    <input type="text" name="category" placeholder="Category (optional)" />
+    <br>
+    <input type="file" name="image" accept="image/*" />
+    <br>
+    <button type="submit">Create Post</button>
+  </form>
+
+  <hr>
+  <h2>Blog Posts</h2>
+
+  <form method="GET" action="/blog/dashboard" style="margin-bottom: 1em;">
+    <label for="category">Filter by category:</label>
+    <select name="category" id="category" onchange="this.form.submit()">
+      <option value="">All Categories</option>
+      <% categories.forEach(cat => { %>
+        <option value="<%= cat %>" <%= cat === selectedCategory ? 'selected' : '' %>><%= cat %></option>
+      <% }) %>
+    </select>
+  </form>
+
+  <% (posts || []).forEach(post => { %>
+    <div class="post">
+      <h3><%= post.title %></h3>
+      <p><%= post.content %></p>
+      <p>
+        <% if (post.photo) { %>
+          <img src="<%= post.photo %>" alt="Profile Pic" style="width: 32px; height: 32px; border-radius: 50%; vertical-align: middle; margin-right: 8px;">
+        <% } %>
+        <small>By <%= post.author %></small>
+      </p>
+      
+      <p><small><%= post.date %></small></p>
+      <% if (post.image) { %>
+        <img src="<%= post.image %>" alt="Post Image" style="max-width: 100%; margin-top: 1em; border-radius: 6px;" />
+      <% } %>
+
+      <% if (post.category) { %>
+        <p><small>Category: <strong><%= post.category %></strong></small></p>
+      <% } %>
+
+      <div class="post-actions">
+        <form action="/blog/delete/<%= post.id %>" method="POST">
+          <button type="submit">Delete</button>
+        </form>
+        <form action="/blog/edit/<%= post.id %>" method="GET">
+          <button type="submit">Edit</button>
+        </form>
+      </div>
+    </div>
+    <hr>
+  <% }) %>
+
+  <a href="/logout">Logout</a>
+</body>
+</html>
