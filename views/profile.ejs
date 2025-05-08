@@ -7,19 +7,22 @@
 <body>
   <h1><%= username %>'s Profile</h1>
 
+  <!-- Display Profile Picture -->
   <% if (profile.photo) { %>
-    <img src="<%= profile.photo %>" alt="Profile Picture" style="max-width: 150px; border-radius: 50%; margin-bottom: 1em;">
+    <img src="/uploads/profiles/<%= profile.photo %>" alt="Profile Picture" style="max-width: 150px; border-radius: 50%; margin-bottom: 1em;">
+  <% } else { %>
+    <img src="/uploads/profiles/default.jpg" alt="Default Profile Picture" style="max-width: 150px; border-radius: 50%; margin-bottom: 1em;">
   <% } %>
 
+  <!-- Form to Update Profile -->
   <form action="/profile" method="POST" enctype="multipart/form-data">
     <label>Username:</label><br>
     <input type="text" name="username" value="<%= username %>" /><br><br>
 
-
-
     <label>Bio:</label><br>
-    <textarea name="bio" rows="4" placeholder="Write something about yourself..."><%= profile.bio || '' %></textarea>
+    <textarea name="bio" rows="4" placeholder="Write something about yourself..."><%= profile.bio || '' %></textarea><br><br>
 
+    <!-- Upload Profile Picture -->
     <label>Upload Profile Picture:</label><br>
     <input type="file" name="photo" accept="image/*" /><br><br>
 
